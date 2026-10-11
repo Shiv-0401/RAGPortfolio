@@ -1,0 +1,45 @@
+SHIV PATEL
+CS and Data Science Student, Rutgers University
+Email: ps4shiv@gmail.com
+
+EDUCATION
+Rutgers University — B.S. in Computer Science and Data Science
+Relevant coursework: Data Structures, Algorithms, Machine Learning, Data Science Principles, Databases, Statistics.
+
+EXPERIENCE
+
+HeadStarter AI Fellowship
+AI/Software Engineering Fellow
+Selected for a competitive fellowship focused on building and shipping real-world AI products under mentorship. Built multiple full-stack AI applications in fast sprint cycles, working with LLM APIs, retrieval pipelines, and production deployment.
+
+PROJECTS
+
+NBAPredictor
+Predicts NBA All-Star selections using 5,386 player-seasons (2015-2025), achieving an AUC-ROC of 0.9933. Features SHAP explainability, a player recommendation engine, a compare tool, and a "Guess Who" game, built with Python, XGBoost, K-Means clustering, SHAP, Flask, and cosine similarity. Deployed as a full-stack Flask application.
+
+F1 Race Outcome Prediction
+A hybrid ML pipeline on 26,760 race entries (2008-2024) achieving an AUC-ROC of 0.930 for podium prediction. Uses K-Means clustering for driver archetypes and SHAP for feature importance, validated with 5-fold cross-validation. Built with Python, XGBoost, K-Means, SHAP, Pandas, and scikit-learn.
+
+ResumeIQ
+An AI-powered resume screener that scores resumes against job descriptions using NLP. Features ATS simulation, a keyword heatmap, gap analysis, a cover letter generator, an interview question predictor, and a resume version tracker. Built with Python, Flask, spaCy, SQLite, NLP, and JavaScript.
+
+FIFA-VAR AI Failure Audit
+An AI safety audit of 14 VAR incidents at the 2026 FIFA World Cup, using the NIST AI Risk Management Framework and CISA guidelines. Features z-score bias screening and a full written research report. Built with Python, Pandas, XGBoost, NIST AI RMF, CISA, and Jupyter.
+
+StockSentiment
+Scrapes financial news headlines, scores sentiment with dual NLP engines (VADER and TextBlob), and correlates sentiment with stock price movements. Features an XGBoost predictor, a backtesting dashboard, and sentiment vs. price visualizations. Built with Python, Flask, VADER, TextBlob, XGBoost, and Pandas.
+
+HealthPredictor
+Hospital readmission prediction using the UCI 130-US Hospitals dataset (101,766 encounters). Features data profiling, quality checks, SQL analysis, a calibrated XGBoost classifier, and a Flask web interface. Built with Python, SQL, XGBoost, Pandas, SQLite, and Flask.
+
+RAGPortfolio
+A RAG chatbot that answers questions about Shiv's projects and experience using vector embeddings and Llama 3. Built with Python, LangChain, ChromaDB, Groq, sentence-transformers, and Flask.
+
+SKILLS
+Languages: Python, Java, JavaScript, SQL
+Web/Frameworks: React, Flask
+Machine Learning: XGBoost, SHAP, K-Means clustering, cosine similarity, scikit-learn
+NLP: spaCy, VADER, TextBlob
+Data & Databases: SQLite, SQL, Pandas
+AI Governance: NIST AI Risk Management Framework (AI RMF), CISA guidelines
+Other: Data Structures & Algorithms, Git, Jupyter

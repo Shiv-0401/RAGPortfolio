@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ask about Shiv</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  body {
+    background: #0d1117;
+    color: #e6edf3;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header.app-header {
+    padding: 1.5rem 1rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid #21262d;
+  }
+  header.app-header h1 {
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+  header.app-header p {
+    color: #8b949e;
+    margin-bottom: 0;
+  }
+  .chat-container {
+    flex: 1;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    padding: 0.5rem 0 1rem;
+  }
+  .chip {
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .chip:hover {
+    background: #21262d;
+  }
+  .message-row {
+    display: flex;
+    margin-bottom: 1rem;
+  }
+  .message-row.user {
+    justify-content: flex-end;
+  }
+  .message-row.ai {
+    justify-content: flex-start;
+  }
+  .bubble {
+    max-width: 80%;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .bubble.user {
+    background: #1f6feb;
+    color: #fff;
+    border-bottom-right-radius: 0.25rem;
+  }
+  .bubble.ai {
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+    border-bottom-left-radius: 0.25rem;
+  }
+  .sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.6rem;
+  }
+  .source-badge {
+    font-size: 0.7rem;
+    background: #21262d;
+    color: #8b949e;
+    border: 1px solid #30363d;
+  }
+  .typing-indicator {
+    display: inline-flex;
+    gap: 4px;
+    padding: 0.4rem 0;
+  }
+  .typing-indicator span {
+    width: 6px;
+    height: 6px;
+    background: #8b949e;
+    border-radius: 50%;
+    animation: blink 1.4s infinite both;
+  }
+  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0.2; }
+    40% { opacity: 1; }
+  }
+  .input-bar {
+    border-top: 1px solid #21262d;
+    background: #0d1117;
+    padding: 1rem;
+  }
+  .input-bar-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0.5rem;
+  }
+  #question-input {
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+  }
+  #question-input:focus {
+    background: #161b22;
+    color: #e6edf3;
+    border-color: #1f6feb;
+    box-shadow: 0 0 0 0.2rem rgba(31, 111, 235, 0.25);
+  }
+  @media (max-width: 576px) {
+    .bubble { max-width: 90%; }
+    header.app-header h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>Ask about Shiv</h1>
+  <p>Powered by RAG + Llama 3</p>
+</header>
+
+<div class="chat-container" id="chat-container">
+  <div class="chips" id="chips">
+    <div class="chip" data-q="What projects has Shiv built?">What projects has Shiv built?</div>
+    <div class="chip" data-q="What are his technical skills?">What are his technical skills?</div>
+    <div class="chip" data-q="Tell me about NBAPredictor">Tell me about NBAPredictor</div>
+    <div class="chip" data-q="What is his experience with ML?">What is his experience with ML?</div>
+    <div class="chip" data-q="Has he worked with AI before?">Has he worked with AI before?</div>
+  </div>
+  <div id="messages"></div>
+</div>
+
+<div class="input-bar">
+  <div class="input-bar-inner">
+    <input type="text" id="question-input" class="form-control" placeholder="Ask a question about Shiv...">
+    <button id="send-btn" class="btn btn-primary">Send</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const messagesEl = document.getElementById('messages');
+const inputEl = document.getElementById('question-input');
+const sendBtn = document.getElementById('send-btn');
+const chatContainer = document.getElementById('chat-container');
+const chips = document.getElementById('chips');
+
+function scrollToBottom() {
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function addUserMessage(text) {
+  const row = document.createElement('div');
+  row.className = 'message-row user';
+  row.innerHTML = `<div class="bubble user"></div>`;
+  row.querySelector('.bubble').textContent = text;
+  messagesEl.appendChild(row);
+  scrollToBottom();
+}
+
+function addTypingIndicator() {
+  const row = document.createElement('div');
+  row.className = 'message-row ai';
+  row.id = 'typing-row';
+  row.innerHTML = `<div class="bubble ai"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+  messagesEl.appendChild(row);
+  scrollToBottom();
+}
+
+function removeTypingIndicator() {
+  const row = document.getElementById('typing-row');
+  if (row) row.remove();
+}
+
+function addAiMessage(text, sources) {
+  const row = document.createElement('div');
+  row.className = 'message-row ai';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble ai';
+
+  const textDiv = document.createElement('div');
+  textDiv.textContent = text;
+  bubble.appendChild(textDiv);
+
+  if (sources && sources.length) {
+    const sourcesDiv = document.createElement('div');
+    sourcesDiv.className = 'sources';
+    sources.forEach(src => {
+      const badge = document.createElement('span');
+      badge.className = 'badge source-badge';
+      badge.textContent = src;
+      sourcesDiv.appendChild(badge);
+    });
+    bubble.appendChild(sourcesDiv);
+  }
+
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+  scrollToBottom();
+}
+
+async function sendQuestion(question) {
+  if (!question.trim()) return;
+
+  addUserMessage(question);
+  inputEl.value = '';
+  addTypingIndicator();
+
+  try {
+    const res = await fetch('/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question })
+    });
+    const data = await res.json();
+    removeTypingIndicator();
+
+    if (data.error) {
+      addAiMessage(`Error: ${data.error}`, []);
+    } else {
+      addAiMessage(data.answer, data.sources);
+    }
+  } catch (err) {
+    removeTypingIndicator();
+    addAiMessage(`Error: ${err.message}`, []);
+  }
+}
+
+sendBtn.addEventListener('click', () => sendQuestion(inputEl.value));
+inputEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') sendQuestion(inputEl.value);
+});
+chips.addEventListener('click', (e) => {
+  if (e.target.classList.contains('chip')) {
+    sendQuestion(e.target.dataset.q);
+  }
+});
+</script>
+</body>
+</html>
